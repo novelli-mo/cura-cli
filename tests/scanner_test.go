@@ -11,9 +11,15 @@ import (
 
 func TestScanRepo_CollectsExtensions(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main"), 0644)
-	os.WriteFile(filepath.Join(dir, "utils.go"), []byte("package main"), 0644)
-	os.WriteFile(filepath.Join(dir, "README.md"), []byte("# Test"), 0644)
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "utils.go"), []byte("package main"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "README.md"), []byte("# Test"), 0644); err != nil {
+		t.Fatal(err)
+	}
 
 	ctx, err := scanner.ScanRepo(dir)
 	if err != nil {
@@ -30,7 +36,9 @@ func TestScanRepo_CollectsExtensions(t *testing.T) {
 
 func TestScanRepo_ReadsReadme(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "README.md"), []byte("This is a Go CLI tool"), 0644)
+	if err := os.WriteFile(filepath.Join(dir, "README.md"), []byte("This is a Go CLI tool"), 0644); err != nil {
+		t.Fatal(err)
+	}
 
 	ctx, err := scanner.ScanRepo(dir)
 	if err != nil {
