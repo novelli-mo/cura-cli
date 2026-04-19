@@ -41,10 +41,10 @@ func main() {
 				fmt.Println("We promise this will use only a very small amount of your Claude tokens.")
 				fmt.Print("Allow? (y/n): ")
 				var answer string
-				fmt.Scanln(&answer)
+				_, _ = fmt.Scanln(&answer)
 				if answer == "y" || answer == "Y" {
 					cfg.ClaudeApproved = true
-					config.Save(cfg)
+					_ = config.Save(cfg)
 					fmt.Println("Saved. You won't be asked again.")
 					fmt.Println("Revoke permission using cura revoke -i claude")
 				}
@@ -54,8 +54,8 @@ func main() {
 				fmt.Println("\nNo LLM provider configured.")
 				fmt.Println("→ Get a free Gemini key at: https://aistudio.google.com")
 				fmt.Print("Paste your Gemini API key: ")
-				fmt.Scanln(&cfg.GeminiAPIKey)
-				config.Save(cfg)
+				_, _ = fmt.Scanln(&cfg.GeminiAPIKey)
+				_ = config.Save(cfg)
 				fmt.Println("Saved. You won't be asked again.")
 				fmt.Println("Revoke permission using cura revoke -i gemini")
 			}
@@ -84,7 +84,7 @@ func main() {
 				os.Exit(1)
 			}
 
-			llm.RecordUsage(dir, resp.TokensUsed)
+			_ = llm.RecordUsage(dir, resp.TokensUsed)
 
 			tokenLabel := "tokens"
 			if resp.IsEstimated {
@@ -106,11 +106,11 @@ func main() {
 			switch provider {
 			case "claude":
 				cfg.ClaudeApproved = false
-				config.Save(cfg)
+				_ = config.Save(cfg)
 				fmt.Println("Claude permission revoked.")
 			case "gemini":
 				cfg.GeminiAPIKey = ""
-				config.Save(cfg)
+				_ = config.Save(cfg)
 				fmt.Println("Gemini API key cleared.")
 			case "":
 				os.Remove(os.ExpandEnv("$HOME/.cura/config.toml"))

@@ -50,7 +50,9 @@ func (g GeminiCaller) Call(prompt string) (string, error) {
 	defer resp.Body.Close()
 
 	var result map[string]any
-	json.NewDecoder(resp.Body).Decode(&result)
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
 
 	text := result["candidates"].([]any)[0].(map[string]any)["content"].(map[string]any)["parts"].([]any)[0].(map[string]any)["text"].(string)
 	return strings.TrimSpace(text), nil
@@ -107,7 +109,9 @@ func CallWithGemini(apiKey, prompt string) (LLMResponse, error) {
 	defer resp.Body.Close()
 
 	var result map[string]any
-	json.NewDecoder(resp.Body).Decode(&result)
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return LLMResponse{}, err
+	}
 
 	text := result["candidates"].([]any)[0].(map[string]any)["content"].(map[string]any)["parts"].([]any)[0].(map[string]any)["text"].(string)
 

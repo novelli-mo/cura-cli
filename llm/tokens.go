@@ -29,13 +29,17 @@ func LoadTokenStore() TokenStore {
 	if err != nil {
 		return store
 	}
-	json.Unmarshal(data, &store)
+	if err := json.Unmarshal(data, &store); err != nil {
+		return store
+	}
 	return store
 }
 
 func SaveTokenStore(store TokenStore) error {
 	path := tokenStorePath()
-	os.MkdirAll(filepath.Dir(path), 0755)
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
 	data, err := json.MarshalIndent(store, "", "  ")
 	if err != nil {
 		return err
@@ -68,7 +72,7 @@ func CheckLimit(repoPath string, estimatedNext int, limit int) (bool, error) {
 		fmt.Printf("This call will use ~%d more tokens.\n", estimatedNext)
 		fmt.Print("Continue anyway? (y/n): ")
 		var answer string
-		fmt.Scanln(&answer)
+		_, _ = fmt.Scanln(&answer)
 		if answer != "y" && answer != "Y" {
 			return false, nil
 		}
