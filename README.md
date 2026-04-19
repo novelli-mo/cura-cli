@@ -1,1 +1,1 @@
-Hello!
+Cura CLI - WIP
